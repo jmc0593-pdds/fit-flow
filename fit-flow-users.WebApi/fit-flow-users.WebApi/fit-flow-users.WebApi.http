@@ -1,0 +1,19 @@
+@fitflowusers_WebApi_HostAddress = http://localhost:5024
+
+GET {{fitflowusers_WebApi_HostAddress}}/user
+Accept: application/json
+###
+
+POST {{fitflowusers_WebApi_HostAddress}}/api/user
+Content-Type: application/json
+
+{
+    "name": "Jorge Cardona",
+    "email": "jorge.cardona@galileo.edu",
+    "Goal": "Strength"
+}
+###
+GET {{fitflowusers_WebApi_HostAddress}}/api/user
+
+###
+GET {{fitflowusers_WebApi_HostAddress}}/api/user/6
