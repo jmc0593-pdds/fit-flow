@@ -10,8 +10,8 @@ on:
     branches: [ "main" ]
 
 env:
-  SOLUTION_PATH: "fit-flow-users.WebApi.sln"
-  API_PROJECT_PATH: "fit-flow-users.WebApi"
+  SOLUTION_PATH: "./fit-flow-users.WebApi/fit-flow-users.WebApi.sln"
+  API_PROJECT_PATH: "./fit-flow-users.WebApi/fit-flow-users.WebApi"
   DOTNET_VERSION: "8.x"
   PUBLISH_DIR: "./publish"
 
