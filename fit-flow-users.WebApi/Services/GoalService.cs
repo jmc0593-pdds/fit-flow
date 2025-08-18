@@ -1,21 +1,24 @@
 ﻿using fit_flow_users.WebApi.Data;
 using fit_flow_users.WebApi.DTOs;
+using StackExchange.Redis;
 
 namespace fit_flow_users.WebApi.Services
 {
     public class GoalService
     {
-        private readonly UserContext _dbContext;
         private readonly IConfiguration _configuration;
         private readonly string? _baseUrl;
+        private readonly IDatabase _redisDatabase;
+        private readonly RedisService _redisService;
 
-        public GoalService(UserContext dbContext, IConfiguration configurations)
+        public GoalService(IConfiguration configurations, IConnectionMultiplexer connectionMultiplexer, RedisService redisService)
         {
-            _dbContext = dbContext;
             _configuration = configurations;
             _baseUrl = configurations.GetValue<string>("RoutinesUrl");
+            _redisDatabase = connectionMultiplexer.GetDatabase();
+            _redisService = redisService;
         }
-
+            
 
         public async Task<List<string>> GetGoals()
         {
@@ -23,21 +26,31 @@ namespace fit_flow_users.WebApi.Services
             {
                 List<string> listOfGoals = [];
                 string baseUrl = $"{_baseUrl}/api/v1/routines/goals".Replace("////", "//");
-                HttpResponseMessage response = await client.GetAsync(baseUrl);
-                response.EnsureSuccessStatusCode();
-                if (response != null)
+                try
                 {
-                    string jsonContent = await response.Content.ReadAsStringAsync();
-                    var goals = System.Text.Json.JsonSerializer.Deserialize<GetGoals>(jsonContent);
-                    goals?.Goals.ForEach(goal =>  listOfGoals.Add(goal));
+                    HttpResponseMessage response = await client.GetAsync(baseUrl);
+                    response.EnsureSuccessStatusCode();
+                    if (response != null)
+                    {
+                        string jsonContent = await response.Content.ReadAsStringAsync();
+                        var goals = System.Text.Json.JsonSerializer.Deserialize<GetGoals>(jsonContent);
+                        goals?.Goals.ForEach(goal => listOfGoals.Add(goal));
+                    }
                 }
+                catch(Exception ex)
+                {
+                    listOfGoals.Add("Strength");
+                }
+                
                 return listOfGoals;
             }
         }
 
-        public async Task SetGoal(int userId, string goal)
+        public async Task SetGoal(Guid userId, string goal)
         {
-            UserService userService = new UserService(_dbContext);
+            GoalSet goalSet = new GoalSet(userId, goal);
+            //RedisService redisService = new RedisService(_redisDatabase);
+            await _redisService.Insert(goalSet, "goal-set", goalSet.userId.ToString());
         }
     }
 }
