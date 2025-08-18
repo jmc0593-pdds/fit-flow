@@ -23,20 +23,15 @@ namespace fit_flow_users.WebApi.Controllers
             _configuration = configurations;
             _redisDatabase = connectionMultiplexer.GetDatabase();
             _userService = userService;
-            _goalService = goalService;
-            /*ConnectionMultiplexer connection = ConnectionMultiplexer.Connect(_configuration.GetConnectionString("Redis"));
-            _redisDatabase = connection.GetDatabase();*/
         }
 
         [HttpPost]
         public async Task<ActionResult> CreateUser([FromBody] CreateUserDto newUser)
         {
-            //GoalService goalService = new GoalService(_configuration, _redisDatabase);
             List<string> goals = await _goalService.GetGoals();
             if (!goals.Contains(newUser.Goal))
                 return NotFound("Goal specified is not present in our internal List");
             
-            //UserService userService = new UserService(_redisDatabase);
             User createdUser = newUser.ConvertToEntity();
             await _userService.CreateUser(createdUser);
 
@@ -44,7 +39,6 @@ namespace fit_flow_users.WebApi.Controllers
 
             return CreatedAtAction(nameof(CreateUser), new { id = createdUser.Id }, createdUser);
         }
-
 
         //[HttpGet]
         //public ActionResult<List<User>> GetUsers()

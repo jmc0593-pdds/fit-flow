@@ -19,18 +19,7 @@ namespace fit_flow_users.WebApi.Services
         {
             user.CreatedAt = DateTime.UtcNow;
             user.Id = Guid.NewGuid();
-            //RedisService redisService = new RedisService(_redisDatabase);
             await _redisService.Insert(user, "users", user.Id.ToString());
         }
-
-        //public List<User> GetUsers()
-        //{
-        //    return _dbContext.User.ToList();
-        //}
-
-        //public User? GetUserById(int id)
-        //{
-        //    return _dbContext.User.FirstOrDefault(user => user.Id == id);
-        //}
     }
 }

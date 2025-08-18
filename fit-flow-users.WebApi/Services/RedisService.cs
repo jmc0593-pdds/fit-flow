@@ -26,31 +26,6 @@ namespace fit_flow_users.WebApi.Services
             {
 
             }
-
-            /*if (insertedValue is GoalSet goalSet)
-            {
-                string jsonString = JsonSerializer.Serialize(goalSet);
-                try
-                {
-                    await _redisDatabase.StringSetAsync($"{prefix}:{id}", jsonString);
-                }
-                catch (Exception ex)
-                {
-
-                }
-            }*/
-            /*if (insertedValue is User user)
-            {
-                string jsonString = JsonSerializer.Serialize(user);
-                try
-                {
-                    await _redisDatabase.StringSetAsync($"{prefix}:{user.Id}", jsonString);
-                }
-                catch (Exception ex)
-                {
-
-                }
-            }*/
         }
     }
 }

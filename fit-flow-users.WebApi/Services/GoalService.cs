@@ -49,7 +49,6 @@ namespace fit_flow_users.WebApi.Services
         public async Task SetGoal(Guid userId, string goal)
         {
             GoalSet goalSet = new GoalSet(userId, goal);
-            //RedisService redisService = new RedisService(_redisDatabase);
             await _redisService.Insert(goalSet, "goal-set", goalSet.userId.ToString());
         }
     }
