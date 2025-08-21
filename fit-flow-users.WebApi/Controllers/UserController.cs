@@ -6,6 +6,7 @@ using fit_flow_users.WebApi.Data;
 using fit_flow_users.WebApi.DTOs;
 using fit_flow_users.WebApi.Mapping;
 using StackExchange.Redis;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace fit_flow_users.WebApi.Controllers
 {
@@ -23,39 +24,27 @@ namespace fit_flow_users.WebApi.Controllers
             _configuration = configurations;
             _redisDatabase = connectionMultiplexer.GetDatabase();
             _userService = userService;
+            _goalService = goalService;
         }
 
         [HttpPost]
         public async Task<ActionResult> CreateUser([FromBody] CreateUserDto newUser)
         {
-            List<string> goals = await _goalService.GetGoals();
-            if (!goals.Contains(newUser.Goal))
-                return NotFound("Goal specified is not present in our internal List");
-            
-            User createdUser = newUser.ConvertToEntity();
-            await _userService.CreateUser(createdUser);
+            try
+            {
+                List<string> goals = await _goalService.GetGoalsAsync();
+                if (!goals.Contains(newUser.Goal))
+                    return NotFound("Goal specified is not present in our internal List");
 
-            await _goalService.SetGoal(createdUser.Id, createdUser.Goal);
-
-            return CreatedAtAction(nameof(CreateUser), new { id = createdUser.Id }, createdUser);
+                User createdUser = newUser.ConvertToEntity();
+                await _userService.CreateUser(createdUser);
+                await _goalService.SetGoalAsync(createdUser.Id, createdUser.Goal);
+                return CreatedAtAction(nameof(CreateUser), new { id = createdUser.Id }, createdUser);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.ToString());
+            }
         }
-
-        //[HttpGet]
-        //public ActionResult<List<User>> GetUsers()
-        //{
-        //    UserService userService = new UserService(_dbContext);
-        //    return userService.GetUsers();
-        //}
-
-        //[HttpGet]
-        //[Route("{id}")]
-        //public ActionResult<GetUserDto> GetUser(int id)
-        //{
-        //    UserService userService = new UserService(_dbContext);
-        //    User? user = userService.GetUserById(id);
-        //    if (user != null)
-        //        return user.ConvertToGetUserDto();
-        //    return new NotFoundResult();
-        //}
     }    
 }

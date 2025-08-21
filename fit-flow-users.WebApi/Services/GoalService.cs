@@ -20,7 +20,7 @@ namespace fit_flow_users.WebApi.Services
         }
             
 
-        public async Task<List<string>> GetGoals()
+        public async Task<List<string>> GetGoalsAsync()
         {
             using (var client = new HttpClient())
             {
@@ -39,17 +39,17 @@ namespace fit_flow_users.WebApi.Services
                 }
                 catch(Exception ex)
                 {
-                    listOfGoals.Add("Strength");
+                    Console.WriteLine(ex.ToString());
                 }
-                
                 return listOfGoals;
             }
         }
 
-        public async Task SetGoal(Guid userId, string goal)
+        public async Task SetGoalAsync(Guid userId, string goal)
         {
             GoalSet goalSet = new GoalSet(userId, goal);
-            await _redisService.Insert(goalSet, "goal-set", goalSet.userId.ToString());
+            await _redisService.InsertAsync(goalSet, "goal-set", goalSet.userId.ToString());
+            Console.WriteLine("Goal created");
         }
     }
 }

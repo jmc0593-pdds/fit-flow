@@ -15,7 +15,7 @@ namespace fit_flow_users.WebApi.Services
             _redisDatabase = connectionMultiplexer.GetDatabase();
         }
 
-        public async Task Insert(object insertedValue, string prefix, string id)
+        public async Task InsertAsync(object insertedValue, string prefix, string id)
         {
             string jsonString = JsonSerializer.Serialize(insertedValue);
             try
@@ -24,8 +24,13 @@ namespace fit_flow_users.WebApi.Services
             }
             catch (Exception ex)
             {
-
+                Console.WriteLine(ex.ToString());
             }
+        }
+
+        public async Task GetRoutineRecommendedAsync()
+        {
+
         }
     }
 }

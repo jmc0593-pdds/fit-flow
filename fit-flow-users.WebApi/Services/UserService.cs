@@ -19,7 +19,8 @@ namespace fit_flow_users.WebApi.Services
         {
             user.CreatedAt = DateTime.UtcNow;
             user.Id = Guid.NewGuid();
-            await _redisService.Insert(user, "users", user.Id.ToString());
+            await _redisService.InsertAsync(user, "users", user.Id.ToString());
+            Console.WriteLine("User Created");
         }
     }
 }

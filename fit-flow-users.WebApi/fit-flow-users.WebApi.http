@@ -17,3 +17,5 @@ GET {{fitflowusers_WebApi_HostAddress}}/api/user
 
 ###
 GET {{fitflowusers_WebApi_HostAddress}}/api/user/6
+###
+{{fitflowusers_WebApi_HostAddress}}/api/status/
