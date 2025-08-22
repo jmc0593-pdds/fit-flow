@@ -14,24 +14,5 @@ namespace fit_flow_users.WebApi.Mapping
                 Goal = user.Goal
             };
         }
-
-        public static CreateUserDto ConvertToCreateUserDto(this User user)
-        {
-            return new CreateUserDto(
-                user.Name,
-                user.Email,
-                user.Goal
-                );
-        }
-
-        public static GetUserDto ConvertToGetUserDto(this User user)
-        {
-            return new GetUserDto(
-                user.Id,
-                user.Name,
-                user.Email,
-                user.Goal
-                );
-        }
     }
 }

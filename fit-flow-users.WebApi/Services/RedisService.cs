@@ -3,24 +3,28 @@ using StackExchange.Redis;
 using fit_flow_users.WebApi.Models;
 
 using System.Text.Json;
+using Microsoft.Extensions.ObjectPool;
 
 namespace fit_flow_users.WebApi.Services
 {
     public class RedisService
     {
         private IDatabase _redisDatabase;
+        private ISubscriber _subscriber;
+
 
         public RedisService(IConnectionMultiplexer connectionMultiplexer)
         {
             _redisDatabase = connectionMultiplexer.GetDatabase();
+            _subscriber = connectionMultiplexer.GetSubscriber();
         }
 
-        public async Task InsertAsync(object insertedValue, string prefix, string id)
+        public async Task InsertKeyValueAsync(object insertedValue, string prefix, string id)
         {
             string jsonString = JsonSerializer.Serialize(insertedValue);
             try
             {
-                await _redisDatabase.StringSetAsync($"{prefix}:{id}", jsonString);
+                bool wasInserted = await _redisDatabase.StringSetAsync($"{prefix}:{id}", jsonString);
             }
             catch (Exception ex)
             {
@@ -28,9 +32,39 @@ namespace fit_flow_users.WebApi.Services
             }
         }
 
-        public async Task GetRoutineRecommendedAsync()
+        public async Task InsertInListAsync(string listName, object insertedValue)
         {
+            string jsonString = JsonSerializer.Serialize(insertedValue);
+            try
+            {   
+                await _redisDatabase.ListRightPushAsync(listName, jsonString);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+        }
 
+        public async Task<object?> ReadQueue(string queue)
+        {
+            object? objectObtained = null;
+            while (true)
+            {
+                var result = await _redisDatabase.ListRightPopAsync(queue);
+                if (!result.IsNullOrEmpty)
+                {
+                    objectObtained = JsonSerializer.Deserialize<object>(result);
+                    break;
+                }
+                await Task.Delay(200);
+            }
+            return objectObtained;
+        }
+
+        public async Task GetAsync(string key)
+        {
+            var value = await _redisDatabase.StringGetAsync(key);
+            int x = 0;
         }
     }
 }

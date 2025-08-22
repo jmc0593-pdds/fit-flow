@@ -1,5 +1,10 @@
 using fit_flow_users.WebApi.Services;
+using Microsoft.AspNetCore.Http.Timeouts;
+using Microsoft.Extensions.Caching;
 using StackExchange.Redis;
+using StackExchange.Redis.Extensions.Core.Abstractions;
+using StackExchange.Redis.Extensions.Core.Configuration;
+using StackExchange.Redis.Extensions.System.Text.Json;
 
 try
 {
@@ -18,6 +23,10 @@ try
         if (configuration == null)
             throw new Exception("Not able to find Redis connection string in configuration file");
         return ConnectionMultiplexer.Connect(configuration);
+    });
+    builder.Services.AddRequestTimeouts(options =>
+    {
+        options.DefaultPolicy = new RequestTimeoutPolicy { Timeout = TimeSpan.FromSeconds(60) };
     });
     var app = builder.Build();
 

@@ -1,4 +1,6 @@
-﻿namespace fit_flow_users.WebApi.Models
+﻿using fit_flow_users.WebApi.DTOs;
+
+namespace fit_flow_users.WebApi.Models
 {
     public record class User()
     {
@@ -7,6 +9,7 @@
         public string Email { get; set; }
         public string Goal { get; set; }
         public DateTime CreatedAt { get; set; }
+        public WorkoutData WorkoutData { get; set; }
 
     }
 }

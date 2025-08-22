@@ -9,7 +9,7 @@ namespace fit_flow_users.WebApi.Controllers
         [HttpGet]
         public ActionResult GetStatus()
         {
-            return Ok("hola");
+            return Ok("Api up and running");
         }
     }
 }

@@ -4,6 +4,7 @@
         Guid Id,
         string Name,
         string Email,
-        string Goal
+        string Goal,
+        WorkoutData WorkoutData
         );
 }
