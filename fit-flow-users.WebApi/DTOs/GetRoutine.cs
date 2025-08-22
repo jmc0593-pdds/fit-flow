@@ -5,10 +5,10 @@ namespace fit_flow_users.WebApi.DTOs
     public class WorkoutData
     {
         [JsonPropertyName("Strength")]
-        public StrengthCategory Strength { get; set; }
+        public Goal Goal { get; set; }
     }
 
-    public class StrengthCategory
+    public class Goal
     {
         [JsonPropertyName("routines")]
         public List<Routine> Routines { get; set; } = new List<Routine>();

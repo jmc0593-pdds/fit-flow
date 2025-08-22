@@ -2,6 +2,7 @@
 using fit_flow_users.WebApi.DTOs;
 using Microsoft.Extensions.Primitives;
 using StackExchange.Redis;
+using System.Text.Json;
 
 namespace fit_flow_users.WebApi.Services
 {
@@ -51,21 +52,19 @@ namespace fit_flow_users.WebApi.Services
             Console.WriteLine("Goal created");
         }
 
-        public async Task<object?> GetRoutineRecommendedAsync()
+        public async Task<RoutineRecomended> GetRoutineRecommendedAsync()
         {
-            object? routineRecomended = null;
             string eventName = "routine-recommended";
-            object?  routineRecomendedObtained = await _redisService.ReadQueue(eventName);
-            if (routineRecomendedObtained != null)
-                routineRecomended = routineRecomendedObtained;
+            var redisValue = await _redisService.ReadQueue(eventName);
+            var routineRecomended = JsonSerializer.Deserialize<RoutineRecomended>(redisValue);
             return routineRecomended;
         }
 
-        public async Task<WorkoutData> GetRoutineAsync(object routineRecommended)
+        public async Task<Routine> GetRoutineAsync(RoutineRecomended routineRecommended)
         {
-            WorkoutData? workoutData = new WorkoutData();
-            Uri routinesUri = new Uri(_routinesUrl);
-            Uri endpointUri = new Uri(routinesUri, "api/v1/routines/by-goal");
+            Routine? routine = new();
+            Uri routinesUri = new(_routinesUrl);
+            Uri endpointUri = new(routinesUri, "api/v1/routines/by-goal");
             using (var client = new HttpClient())
             {
                 try
@@ -75,14 +74,15 @@ namespace fit_flow_users.WebApi.Services
                     if (response != null)
                     {
                         string jsonContent = await response.Content.ReadAsStringAsync();
-                        workoutData = System.Text.Json.JsonSerializer.Deserialize<WorkoutData>(jsonContent);
+                        var workoutData = System.Text.Json.JsonSerializer.Deserialize<WorkoutData>(jsonContent);
+                        routine = workoutData?.Goal.Routines.Where(routine => routine.Id == routineRecommended.routine_id).FirstOrDefault();
                     }
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.ToString());
                 }
-                return workoutData;
+                return routine;
             }
         }
     }

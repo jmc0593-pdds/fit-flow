@@ -9,7 +9,7 @@ namespace fit_flow_users.WebApi.Models
         public string Email { get; set; }
         public string Goal { get; set; }
         public DateTime CreatedAt { get; set; }
-        public WorkoutData WorkoutData { get; set; }
+        public Routine Routine { get; set; }
 
     }
 }

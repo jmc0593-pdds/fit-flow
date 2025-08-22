@@ -45,20 +45,20 @@ namespace fit_flow_users.WebApi.Services
             }
         }
 
-        public async Task<object?> ReadQueue(string queue)
+        public async Task<RedisValue> ReadQueue(string queue)
         {
-            object? objectObtained = null;
+            RedisValue queueValue = new RedisValue();
             while (true)
             {
                 var result = await _redisDatabase.ListRightPopAsync(queue);
                 if (!result.IsNullOrEmpty)
                 {
-                    objectObtained = JsonSerializer.Deserialize<object>(result);
+                    queueValue = result;
                     break;
                 }
                 await Task.Delay(200);
             }
-            return objectObtained;
+            return queueValue;
         }
 
         public async Task GetAsync(string key)

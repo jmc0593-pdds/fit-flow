@@ -40,9 +40,9 @@ namespace fit_flow_users.WebApi.Controllers
                 User createdUser = newUser.ConvertToEntity();
                 await _userService.CreateUser(createdUser);
                 await _goalService.SetGoalAsync(createdUser.Id, createdUser.Goal);
-                object? routineRecomended = await _goalService.GetRoutineRecommendedAsync();
+                RoutineRecomended? routineRecomended = await _goalService.GetRoutineRecommendedAsync();
                 if (routineRecomended != null)
-                    createdUser.WorkoutData = await _goalService.GetRoutineAsync(routineRecomended);
+                    createdUser.Routine = await _goalService.GetRoutineAsync(routineRecomended);
 
                 return CreatedAtAction(nameof(CreateUser), new { id = createdUser.Id }, createdUser);
             }
