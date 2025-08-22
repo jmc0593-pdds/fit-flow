@@ -1,5 +1,4 @@
-﻿using fit_flow_users.WebApi.Data;
-using fit_flow_users.WebApi.Models;
+﻿using fit_flow_users.WebApi.Models;
 using fit_flow_users.WebApi.Mapping;
 using StackExchange.Redis;
 

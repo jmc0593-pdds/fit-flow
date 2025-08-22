@@ -1,5 +1,4 @@
-﻿using fit_flow_users.WebApi.Data;
-using fit_flow_users.WebApi.DTOs;
+﻿using fit_flow_users.WebApi.DTOs;
 using Microsoft.Extensions.Primitives;
 using StackExchange.Redis;
 using System.Text.Json;
