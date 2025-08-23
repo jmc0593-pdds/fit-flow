@@ -45,7 +45,6 @@ namespace fit_flow_users.WebApi.Services
 
         public async Task SetGoalAsync(Guid userId, string goal)
         {
-            
             GoalSet goalSet = new GoalSet(userId, goal);
             await _redisService.InsertInListAsync("goal-set", goalSet);
             Console.WriteLine("Goal created");
