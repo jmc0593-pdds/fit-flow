@@ -33,8 +33,8 @@ namespace fit_flow_users.WebApi.Controllers
         public async Task<ActionResult> GetUser(string id)
         {
             List<User> users = await _userService.GetUsers($"users:{id}");
-            if (users.Count > 0)
-                Ok(users);
+            if (users.Any())
+                return Ok(users);
 
             return NotFound($"User with the id {id} not found.");
         } 
