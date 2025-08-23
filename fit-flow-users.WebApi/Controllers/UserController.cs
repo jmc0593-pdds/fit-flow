@@ -26,6 +26,19 @@ namespace fit_flow_users.WebApi.Controllers
             _connectionMultiplexer = connectionMultiplexer;
         }
 
+        [HttpGet]
+        public async Task<ActionResult> GetUsers() => Ok(await _userService.GetUsers("users:*"));
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetUser(string id)
+        {
+            List<User> users = await _userService.GetUsers($"users:{id}");
+            if (users.Count > 0)
+                Ok(users);
+
+            return NotFound($"User with the id {id} not found.");
+        } 
+
         [HttpPost]
         public async Task<ActionResult> CreateUser([FromBody] CreateUserDto newUser)
         {
@@ -33,15 +46,16 @@ namespace fit_flow_users.WebApi.Controllers
             {
                 List<string> goals = await _goalService.GetGoalsAsync();
                 if (!goals.Contains(newUser.Goal))
-                    return NotFound("Goal specified is not present in our internal List");
+                    return NotFound($"Goal {newUser.Goal} is not present in our internal List");
 
                 User createdUser = newUser.ConvertToEntity();
-                await _userService.CreateUser(createdUser);
+                createdUser.Id = Guid.NewGuid();
                 await _goalService.SetGoalAsync(createdUser.Id, createdUser.Goal);
                 RoutineRecomended? routineRecomended = await _goalService.GetRoutineRecommendedAsync();
                 if (routineRecomended != null)
                     createdUser.Routine = await _goalService.GetRoutineAsync(routineRecomended);
-
+                
+                await _userService.CreateUser(createdUser);
                 return CreatedAtAction(nameof(CreateUser), new { id = createdUser.Id }, createdUser);
             }
             catch (Exception ex)
@@ -50,12 +64,16 @@ namespace fit_flow_users.WebApi.Controllers
             }
         }
 
-        [HttpGet]
-        public async Task<ActionResult> GetUsers()
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteUser(string id)
         {
-            List<GetUserDto> users = [];
-            await _userService.GetUsers();
-            return Ok(users);
+            string pattern = $"users:{id}";
+            List<User> users = await _userService.GetUsers(pattern);
+            if (!users.Any())
+                return NotFound($"Not found the id {id} to be deleted.");
+
+            await _userService.DeleteUserAsync(pattern);
+            return Ok($"User with id {id} deleted.");
         }
     }    
 }

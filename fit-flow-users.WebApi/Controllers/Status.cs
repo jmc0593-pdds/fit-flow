@@ -9,7 +9,7 @@ namespace fit_flow_users.WebApi.Controllers
         [HttpGet]
         public ActionResult GetStatus()
         {
-            return Ok("Api up and running");
+            return Ok($"Api is up and running. UTC time: {DateTime.UtcNow}");
         }
     }
 }

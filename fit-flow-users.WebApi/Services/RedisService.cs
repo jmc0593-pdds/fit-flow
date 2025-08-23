@@ -11,11 +11,12 @@ namespace fit_flow_users.WebApi.Services
     {
         private IDatabase _redisDatabase;
         private ISubscriber _subscriber;
-
+        private IServer _redisServer;
 
         public RedisService(IConnectionMultiplexer connectionMultiplexer)
         {
             _redisDatabase = connectionMultiplexer.GetDatabase();
+            _redisServer = connectionMultiplexer.GetServer(connectionMultiplexer.GetEndPoints().First());
             _subscriber = connectionMultiplexer.GetSubscriber();
         }
 
@@ -61,10 +62,20 @@ namespace fit_flow_users.WebApi.Services
             return queueValue;
         }
 
-        public async Task GetAsync(string key)
+        public async Task<List<RedisValue>> GetRedisValuesByPattern(string pattern)
         {
-            var value = await _redisDatabase.StringGetAsync(key);
-            int x = 0;
+            List<RedisValue> redisValueList = [];
+            var gotKeys = _redisServer.Keys(pattern: pattern);
+            foreach (RedisKey redisKey in gotKeys)
+                redisValueList.Add(await _redisDatabase.StringGetAsync(redisKey));
+
+            return redisValueList;
+        }
+
+        public async Task DeleteRedisKeysByPattern(string pattern)
+        {
+            var gotKeys = _redisServer.Keys(pattern: pattern).ToArray();
+            await _redisDatabase.KeyDeleteAsync(gotKeys);
         }
     }
 }

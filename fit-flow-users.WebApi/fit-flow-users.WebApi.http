@@ -1,9 +1,12 @@
 @fitflowusers_WebApi_HostAddress = http://localhost:5024
 
-GET {{fitflowusers_WebApi_HostAddress}}/user
+GET {{fitflowusers_WebApi_HostAddress}}/api/user
 Accept: application/json
-###
 
+###
+GET {{fitflowusers_WebApi_HostAddress}}/api/user/a2484974-cafd-4ab5-bc1d-f0678b7d1495
+
+###
 POST {{fitflowusers_WebApi_HostAddress}}/api/user
 Content-Type: application/json
 
@@ -13,9 +16,7 @@ Content-Type: application/json
     "Goal": "Strength"
 }
 ###
-GET {{fitflowusers_WebApi_HostAddress}}/api/user
+DELETE {{fitflowusers_WebApi_HostAddress}}/api/user/a2484974-cafd-4ab5-bc1d-f0678b7d1495
 
-###
-GET {{fitflowusers_WebApi_HostAddress}}/api/user/6
 ###
 {{fitflowusers_WebApi_HostAddress}}/api/status/

@@ -65,7 +65,10 @@ docker run -p 8080:80 fit-flow-users
 ## API Endpoints
 
 - `GET /api/status` - Check API status
-- `POST /api/user` - Create new user
+- `POST /api/users` - Create new user
+- `GET /api/users` - Get all users
+- `GET /api/users/{id}` - Get user by ID
+- `DELETE /api/users/{id}` - Delete user
 
 ## Project Structure
 
@@ -73,3 +76,4 @@ docker run -p 8080:80 fit-flow-users
 - `/Services` - Business logic
 - `/Models` - Domain models
 - `/DTOs` - Data transfer objects
+- `/Mappings` - Change from diferent data structures

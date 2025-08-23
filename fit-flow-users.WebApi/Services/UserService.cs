@@ -1,6 +1,8 @@
 ﻿using fit_flow_users.WebApi.Models;
 using fit_flow_users.WebApi.Mapping;
 using StackExchange.Redis;
+using System.Text.Json;
+using Microsoft.AspNetCore.Mvc;
 
 namespace fit_flow_users.WebApi.Services
 {
@@ -15,14 +17,23 @@ namespace fit_flow_users.WebApi.Services
         public async Task CreateUser(User user)
         {
             user.CreatedAt = DateTime.UtcNow;
-            user.Id = Guid.NewGuid();
             await _redisService.InsertKeyValueAsync(user, "users", user.Id.ToString());
             Console.WriteLine("User Created");
         }
 
-        public async Task GetUsers()
+        public async Task<List<User>> GetUsers(string pattern)
         {
-            await _redisService.GetAsync("user");
+            List<User> userList = [];
+            List<RedisValue> redisValueList = await _redisService.GetRedisValuesByPattern(pattern);
+            foreach(RedisValue redisValue in redisValueList)
+                userList.Add(JsonSerializer.Deserialize<User>(redisValue));
+
+            return userList;
+        }
+        [HttpDelete]
+        public async Task DeleteUserAsync(string pattern)
+        {
+            await _redisService.DeleteRedisKeysByPattern(pattern);
         }
     }
 }

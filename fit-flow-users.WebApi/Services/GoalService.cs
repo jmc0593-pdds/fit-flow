@@ -73,7 +73,7 @@ namespace fit_flow_users.WebApi.Services
                     if (response != null)
                     {
                         string jsonContent = await response.Content.ReadAsStringAsync();
-                        var workoutData = System.Text.Json.JsonSerializer.Deserialize<WorkoutData>(jsonContent);
+                        var workoutData = JsonSerializer.Deserialize<WorkoutData>(jsonContent);
                         routine = workoutData?.Goal.Routines.Where(routine => routine.Id == routineRecommended.routine_id).FirstOrDefault();
                     }
                 }
