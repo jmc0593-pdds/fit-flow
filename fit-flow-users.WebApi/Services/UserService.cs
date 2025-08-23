@@ -28,7 +28,7 @@ namespace fit_flow_users.WebApi.Services
             foreach(RedisValue redisValue in redisValueList)
                 userList.Add(JsonSerializer.Deserialize<User>(redisValue));
 
-            return userList;
+            return userList.OrderBy(user => user.CreatedAt).ToList();
         }
         [HttpDelete]
         public async Task DeleteUserAsync(string pattern)

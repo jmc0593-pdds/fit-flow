@@ -10,14 +10,12 @@ namespace fit_flow_users.WebApi.Services
     public class RedisService
     {
         private IDatabase _redisDatabase;
-        private ISubscriber _subscriber;
         private IServer _redisServer;
 
         public RedisService(IConnectionMultiplexer connectionMultiplexer)
         {
             _redisDatabase = connectionMultiplexer.GetDatabase();
             _redisServer = connectionMultiplexer.GetServer(connectionMultiplexer.GetEndPoints().First());
-            _subscriber = connectionMultiplexer.GetSubscriber();
         }
 
         public async Task InsertKeyValueAsync(object insertedValue, string prefix, string id)
