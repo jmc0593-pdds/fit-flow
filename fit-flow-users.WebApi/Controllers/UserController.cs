@@ -73,7 +73,7 @@ namespace fit_flow_users.WebApi.Controllers
                 return NotFound($"Not found the id {id} to be deleted.");
 
             await _userService.DeleteUserAsync(pattern);
-            return Ok($"User with id {id} deleted.");
+            return NoContent();
         }
     }    
 }
