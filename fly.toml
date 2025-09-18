@@ -16,3 +16,15 @@ primary_region = 'ord'
 
 [[vm]]
   size = 'shared-cpu-1x'
+
+[metrics]
+  port = 8081
+  path = "/metrics"
+
+[[http_service.checks]]
+  interval = "15s"
+  timeout = "2s"
+  grace_period = "10s"
+  method = "GET"
+  path = "/api/status/"
+  headers = { X-Forwarded-Proto = "https" }
