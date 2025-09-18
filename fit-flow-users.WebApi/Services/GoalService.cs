@@ -12,7 +12,7 @@ namespace fit_flow_users.WebApi.Services
 
         public GoalService(IConfiguration configurations, RedisService redisService)
         {
-            _routinesUrl = configurations.GetValue<string>("RoutinesUrl");
+            _routinesUrl = Environment.GetEnvironmentVariable("ROUTINES_URL");
             _redisService = redisService;
         }
             
