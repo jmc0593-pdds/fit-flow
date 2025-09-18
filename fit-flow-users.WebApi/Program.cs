@@ -19,7 +19,7 @@ try
     // Add Redis as a singleton
     builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
     {
-        var configuration = builder.Configuration.GetConnectionString("Redis");
+        var configuration = Environment.GetEnvironmentVariable("REDIS_CONNECTION_STRING");
         if (configuration == null)
             throw new Exception("Not able to find Redis connection string in configuration file");
         return ConnectionMultiplexer.Connect(configuration);
