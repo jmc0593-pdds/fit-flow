@@ -82,8 +82,10 @@ docker run -p 8080:80 fit-flow-users
 ## Observavility
 ### Logs
 
-##Resiliencia + Service Registry
-
+## Resilience
+### Timeout
+### Retry Policy
+### Circuit Breaker
 
 ### Health Checks
 The application implements health checks through Fly.io configuration:
