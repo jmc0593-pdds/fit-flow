@@ -78,11 +78,17 @@ docker run -p 8080:80 fit-flow-users
 - `/DTOs` - Data transfer objects
 - `/Mappings` - Change from diferent data structures
 
-## Health Checks
+# Follow Up project 
+## Observavility
+### Logs
 
+##Resiliencia + Service Registry
+
+
+### Health Checks
 The application implements health checks through Fly.io configuration:
 
-### Configuration
+#### Configuration
 ```toml
 [[http_service.checks]]
   interval = "15s"      # Check frequency
@@ -92,9 +98,15 @@ The application implements health checks through Fly.io configuration:
   path = "/api/status/" # Endpoint to check
 ```
 
-### Check Behavior
+#### Check Behavior
 - Runs every 15 seconds
 - Fails if response takes longer than 2 seconds
 - Allows 10 seconds grace period during startup
 - Expects a successful response from `/api/status/` endpoint
 - Uses HTTPS protocol (enforced by X-Forwarded-Proto header)
+
+## Security
+
+### Secrets management
+### Network politics
+### Backups
