@@ -80,10 +80,10 @@ docker run -p 8080:80 fit-flow-users
 
 # Follow Up project 
 ## Trazability
-More information in : [a relative link](/docs/Trazability.md)
+More information in : [Trazability](/docs/Trazability.md)
 
 ## Resilience
-More information in : [a relative link](/docs/Resilience.md)
+More information in : [Resilience](/docs/Resilience.md)
 
 ## Security
-More information in : [a relative link](/docs/Security.md)
+More information in : [Security](/docs/Security.md)
