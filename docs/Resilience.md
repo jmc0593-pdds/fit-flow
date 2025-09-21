@@ -83,4 +83,4 @@ The application implements health checks through Fly.io configuration:
 - Uses HTTPS protocol (enforced by X-Forwarded-Proto header)
 
 #### Fly.io examples
-![Health Check Logs example](img/trazability/logs-example.png "Health Check Logs example")
+![Health Check Logs example](img/resilience/health-check.png "Health Check Logs example")

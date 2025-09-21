@@ -24,7 +24,9 @@ SentrySdk.CaptureMessage(message);
 SentrySdk.CaptureException(message);
 ```
 
-#### Sentry example
+#### Sentry examples
+##### Logs examples
 ![Logs Example](img/trazability/logs-example.png "Logs Example")
 
+##### Trace example
 ![Trace Example](img/trazability/trace-example.png "Trace Example")
