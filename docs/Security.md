@@ -11,4 +11,4 @@ Environment.GetEnvironmentVariable("ROUTINES_URL");
 ![Secrets](img/trazability/logs-example.png "Secrets")
 
 And the secrets have to be recorded throught the platform or whith the next terminal command:
-<pre>```console$ fly secrets set MY_SECRET_KEY=super-secret-value```</pre>
+<pre>fly secrets set MY_SECRET_KEY=super-secret-value</pre>
