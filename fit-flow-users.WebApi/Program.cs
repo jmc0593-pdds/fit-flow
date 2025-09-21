@@ -41,7 +41,7 @@ try
             });
 
             //Timeout per try
-            pipeline.AddTimeout(TimeSpan.FromSeconds(5));
+            pipeline.AddTimeout(TimeSpan.FromSeconds(1));
 
             //Circuit Breaker
             pipeline.AddCircuitBreaker(new HttpCircuitBreakerStrategyOptions
