@@ -8,7 +8,7 @@ Environment.GetEnvironmentVariable("ROUTINES_URL");
 ```
 
 ### Secrets in fly.io
-![Secrets](img/trazability/logs-example.png "Secrets")
+![Secrets](img/security/secrets.png "Secrets")
 
 And the secrets have to be recorded throught the platform or whith the next terminal command:
 <pre>fly secrets set MY_SECRET_KEY=super-secret-value</pre>
