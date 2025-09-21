@@ -21,11 +21,17 @@ try
     builder.Services.AddSwaggerGen();
     builder.Services.AddSingleton<RedisService>();
     builder.Services.AddScoped<UserService>();
+
+    //Routines service configuration
     builder.Services.AddHttpClient<GoalService>(client => client.BaseAddress = new Uri(Environment.GetEnvironmentVariable("ROUTINES_URL")))
         .AddResilienceHandler("GoalServiceHandler", pipeline =>
         {
             int defaultRetryAttemps = builder.Configuration.GetValue<int>("DefaultRetryAttemps");
-            int defaultTimeoutInSeconds = builder.Configuration.GetValue<int>("DefaultTimeoutInSeconds");
+
+            //General reques timeout
+            pipeline.AddTimeout(TimeSpan.FromSeconds(5));
+
+            //Retry with Exponential Backoff and Jitter
             pipeline.AddRetry(new HttpRetryStrategyOptions
             {
                 MaxRetryAttempts = defaultRetryAttemps,
@@ -33,10 +39,21 @@ try
                 UseJitter = true,
                 Delay = TimeSpan.FromMicroseconds(500)
             });
+
+            //Timeout per try
             pipeline.AddTimeout(TimeSpan.FromSeconds(5));
+
+            //Circuit Breaker
+            pipeline.AddCircuitBreaker(new HttpCircuitBreakerStrategyOptions
+            {
+                SamplingDuration = TimeSpan.FromSeconds(10),
+                FailureRatio = 0.9,
+                MinimumThroughput = 10,
+                BreakDuration = TimeSpan.FromSeconds(5)
+            });
         });
 
-    // Add Redis as a singleton
+    // Add Redis Database as a singleton
     builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
     {
         var configuration = Environment.GetEnvironmentVariable("REDIS_CONNECTION_STRING");
@@ -62,6 +79,7 @@ try
         options.SendDefaultPii = true;
     });
     var app = builder.Build();
+
     // Configure the HTTP request pipeline.
     if (app.Environment.IsDevelopment())
     {

@@ -79,59 +79,11 @@ docker run -p 8080:80 fit-flow-users
 - `/Mappings` - Change from diferent data structures
 
 # Follow Up project 
-## Observavility
-### Logs
-
-I used Sentry for the logging management application.
-
-#### Initialization on DI
-```cs
-builder.WebHost.UseSentry(options =>
-    {
-        options.Dsn = Environment.GetEnvironmentVariable("SENTRY_DSN");
-        options.Debug = true;
-        options.TracesSampleRate = 1;
-        options.SendDefaultPii = true;
-    });
-```
-
-#### Usage on normal messages
-```cs
-SentrySdk.CaptureMessage(message);
-```
-
-#### Usage on Exceptions
-```cs
-SentrySdk.CaptureException(message);
-```
+## Trazability
+More information in : [a relative link](/docs/Trazability.md)
 
 ## Resilience
-### Timeout
-### Retry Policy
-### Circuit Breaker
-
-### Health Checks
-The application implements health checks through Fly.io configuration:
-
-#### Configuration
-```toml
-[[http_service.checks]]
-  interval = "15s"      # Check frequency
-  timeout = "2s"        # Max time to wait for response
-  grace_period = "10s"  # Initial delay before starting checks
-  method = "GET"        # HTTP method used
-  path = "/api/status/" # Endpoint to check
-```
-
-#### Check Behavior
-- Runs every 15 seconds
-- Fails if response takes longer than 2 seconds
-- Allows 10 seconds grace period during startup
-- Expects a successful response from `/api/status/` endpoint
-- Uses HTTPS protocol (enforced by X-Forwarded-Proto header)
+More information in : [a relative link](/docs/Resilience.md)
 
 ## Security
-
-### Secrets management
-### Network politics
-### Backups
+More information in : [a relative link](/docs/Security.md)
