@@ -13,6 +13,9 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="9.0.8" />
+    <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="9.9.0" />
+    <PackageReference Include="Sentry" Version="5.15.1" />
+    <PackageReference Include="Sentry.AspNetCore" Version="5.15.1" />
     <PackageReference Include="StackExchange.Redis" Version="2.8.58" />
     <PackageReference Include="StackExchange.Redis.Extensions.AspNetCore" Version="11.0.0" />
     <PackageReference Include="StackExchange.Redis.Extensions.System.Text.Json" Version="11.0.0" />

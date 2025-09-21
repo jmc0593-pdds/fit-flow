@@ -82,6 +82,29 @@ docker run -p 8080:80 fit-flow-users
 ## Observavility
 ### Logs
 
+I used Sentry for the logging management application.
+
+#### Initialization on DI
+```cs
+builder.WebHost.UseSentry(options =>
+    {
+        options.Dsn = Environment.GetEnvironmentVariable("SENTRY_DSN");
+        options.Debug = true;
+        options.TracesSampleRate = 1;
+        options.SendDefaultPii = true;
+    });
+```
+
+#### Usage on normal messages
+```cs
+SentrySdk.CaptureMessage(message);
+```
+
+#### Usage on Exceptions
+```cs
+SentrySdk.CaptureException(message);
+```
+
 ## Resilience
 ### Timeout
 ### Retry Policy

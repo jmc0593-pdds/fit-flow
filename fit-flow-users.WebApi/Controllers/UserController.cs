@@ -5,6 +5,7 @@ using fit_flow_users.WebApi.Services;
 using fit_flow_users.WebApi.DTOs;
 using fit_flow_users.WebApi.Mapping;
 using StackExchange.Redis;
+using Sentry;
 
 namespace fit_flow_users.WebApi.Controllers
 {
@@ -27,16 +28,24 @@ namespace fit_flow_users.WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetUsers() => Ok(await _userService.GetUsers("users:*"));
+        public async Task<ActionResult> GetUsers()
+        {
+            SentrySdk.CaptureMessage("Retrieved Userrs");
+            return Ok(await _userService.GetUsers("users:*"));
+        }
+            
 
         [HttpGet("{id}")]
         public async Task<ActionResult> GetUser(string id)
         {
             List<User> users = await _userService.GetUsers($"users:{id}");
             if (users.Any())
+            {
+                SentrySdk.CaptureMessage($"Returned user with id {id}.");
                 return Ok(users);
-
-            return NotFound($"User with the id {id} not found.");
+            }
+            SentrySdk.CaptureMessage($"User with the id {id} not found.");
+            return NotFound();
         } 
 
         [HttpPost]
@@ -46,8 +55,11 @@ namespace fit_flow_users.WebApi.Controllers
             {
                 List<string> goals = await _goalService.GetGoalsAsync();
                 if (!goals.Contains(newUser.Goal))
-                    return NotFound($"Goal {newUser.Goal} is not present in our internal List");
-
+                {
+                    string message = $"The Goal {newUser.Goal} is not present in our internal List";
+                    SentrySdk.CaptureMessage(message);
+                    return NotFound(message);
+                }
                 User createdUser = newUser.ConvertToEntity();
                 createdUser.Id = Guid.NewGuid();
                 await _goalService.SetGoalAsync(createdUser.Id, createdUser.Goal);
@@ -56,6 +68,7 @@ namespace fit_flow_users.WebApi.Controllers
                     createdUser.Routine = await _goalService.GetRoutineAsync(routineRecomended);
                 
                 await _userService.CreateUser(createdUser);
+                SentrySdk.CaptureMessage($"User with the id {createdUser.Id} created.");
                 return CreatedAtAction(nameof(CreateUser), new { id = createdUser.Id }, createdUser);
             }
             catch (Exception ex)
